@@ -2,12 +2,21 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-            <img src="{{ asset('assets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+            <img src="{{ asset('assets/img/user.jpg') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
             <a href="#" class="d-block">
                 @auth
                     {{ Auth::user()->name }}
+                    @if (Auth::user()->role == 'admin')
+                        (Admin)
+                    @endif
+                    @if (Auth::user()->role == 'doctor')
+                        (Dokter)
+                    @endif
+                    @if (Auth::user()->role == 'guest')
+                        ({{ Auth::user()->patient->rm_number }})
+                    @endif
                 @endauth
             </a>
         </div>
@@ -22,6 +31,15 @@
                 </a>
             </li>
             @auth
+                @if (Auth::user()->role == 'guest')
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard.patient.poli.index') }}" class="nav-link {{ Request::is('dashboard/patient/poli') ? 'active' : '' }}">
+                            <i class="fas fa-chart-line nav-icon"></i>
+                            <p>Daftar Poli</p>
+                        </a>
+                    </li>
+                @endif
+
                 @if (Auth::user()->role == 'admin')
                     {{-- <li class="nav-item">
                         <a href="" class="nav-link }">
@@ -89,19 +107,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ Request::is('*dashboard/doctor/checkup*') ? 'active' : '' }}">
-                           <i class="fas fa-stethoscope nav-icon"></i>
+                        <a href="{{ route('dashboard.doctor.checkup.index') }}"
+                            class="nav-link {{ Request::is('*dashboard/doctor/checkup*') ? 'active' : '' }}">
+                            <i class="fas fa-stethoscope nav-icon"></i>
                             <p>Memeriksa Pasien</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link {{ Request::is('*dashboard/doctor/patient*') ? 'active' : '' }}">
-                            <i class="fas fa-user-injured nav-icon"></i>
-                            <p>Pasien</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link {{ Request::is('*dashboard/doctor/history*') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.doctor.history.index') }}"
+                            class="nav-link {{ Request::is('*dashboard/doctor/history*') ? 'active' : '' }}">
                             <i class="fas fa-history nav-icon"></i>
                             <p>Riwayat Pasien</p>
                         </a>

@@ -22,7 +22,7 @@ class HistoryController extends Controller
 
     public function show($id)
     {
-        $checkup = RegistrationPoli::where('patient_id', $id)->where('status','done')->whereHas('schedule', function ($query) {
+        $checkup = RegistrationPoli::with('checkup')->where('patient_id', $id)->where('status','done')->whereHas('schedule', function ($query) {
             $query->where('doctor_id', auth()->user()->doctor->id);
         })->get();
         return view('dashboard.doctor.history.detail', compact('checkup'));

@@ -63,6 +63,21 @@ class DatabaseSeeder extends Seeder
             'description' => 'Poli Umum',
         ]);
 
+        Poli::create([
+            'name' => 'Gigi',
+            'description' => 'Melayani pasien gigi',
+        ]);
+
+        Poli::create([
+            'name' => 'KIA',
+            'description' => 'Melayani pasien KIA',
+        ]);
+
+        Poli::create([
+            'name' => 'Mata',
+            'description' => 'Melayani pasien mata',
+        ]);
+
         Doctor::create([
             'user_id' => 2,
             'poli_id' => 1,

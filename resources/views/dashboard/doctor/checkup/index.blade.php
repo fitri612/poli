@@ -63,8 +63,13 @@
                                                         {{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d h:i:s') }}
                                                     </td>
                                                     <td>
+                                                        @php
+                                                            $today = \Carbon\Carbon::now()->format('Y-m-d');
+                                                        @endphp
                                                         @if ($item->status == 'waiting')
                                                             <span class="badge badge-warning">Menunggu</span>
+                                                        @elseif($item->created_at->format('Y-m-d') != $today && $item->status == 'waiting')
+                                                            <span class="badge badge-danger">Telat</span>
                                                         @elseif($item->status == 'done')
                                                             <span class="badge badge-success">Selesai</span>
                                                         @endif

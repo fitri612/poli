@@ -10,6 +10,7 @@ use App\Http\Controllers\Docter\ScheduleController;
 use App\Http\Controllers\Doctor\CheckupController;
 use App\Http\Controllers\Doctor\HistoryController;
 use App\Http\Controllers\Doctor\ScheduleDoctorController;
+use App\Http\Controllers\Patient\PoliController as PatientPoliController;
 use App\Http\Controllers\PatientController as ControllersPatientController;
 use App\Models\Poli;
 use App\Models\ServiceSchedule;
@@ -28,14 +29,14 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 */
 
 Route::get('/', function () {
-    $polis = Poli::all();
-    $schedules = ServiceSchedule::with('doctor')->get();
-    return view('client.index', compact('polis', 'schedules'));
+    return view('client.contents.index');
 });
+
+
 
 Route::get('/register/patient', function () {
     return view('client.register-rm');
-});
+})->name('register.patient.view');
 
 Route::post('/register/patient', [ControllersPatientController::class, 'register'])->name('register.patient');
 Route::post('/register/poli', [ControllersPatientController::class, 'registerPoli'])->name('register.poli');
@@ -44,8 +45,19 @@ Route::get('/login', [AuthController::class, 'index'])->name('login')->middlewar
 Route::post('/login', [AuthController::class, 'auth'])->name('auth')->middleware('guest');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+Route::get('/patient/poli-register', function () {
+    $polis = Poli::all();
+    $schedules = ServiceSchedule::with('doctor')->get();
+    return view('client.index', compact('polis', 'schedules'));
+})->name('get.register.poli');
+
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+    Route::prefix('patient')->middleware(['auth', 'patient', 'active'])->name('patient.')->group(function () {
+        Route::resource('poli', PatientPoliController::class);
+    });
+
     Route::prefix('admin')->middleware(['auth', 'admin', 'active'])->name('admin.')->group(function () {
         Route::resource('drug', DrugController::class);
         Route::resource('poli', PoliController::class);

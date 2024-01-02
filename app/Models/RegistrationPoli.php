@@ -10,7 +10,7 @@ class RegistrationPoli extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $with = ['patient', 'schedule','checkup'];
+    protected $with = ['patient', 'schedule'];
 
     public function patient()
     {

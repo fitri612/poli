@@ -5,31 +5,62 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Models\RegistrationPoli;
 use App\Models\ServiceSchedule;
+use App\Models\User;
 use App\Services\GenerateRMNumberService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'ktp_number' => 'required|unique:patients,ktp_number',
-            'phone_number' => 'required',
-        ]);
 
-        $no_rm = GenerateRMNumberService::generate();
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'name' => 'required',
+                'address' => 'required',
+                'ktp_number' => 'required|unique:patients,ktp_number',
+                'phone_number' => 'required',
+                'email' => 'required|unique:users,email',
+                'password' => 'required|min:6',
+            ]);
 
-        Patient::create([
-            'name' => $request->name,
-            'address' => $request->address,
-            'ktp_number' => $request->ktp_number,
-            'phone_number' => $request->phone_number,
-            'rm_number' => $no_rm,
-        ]);
+            $no_rm = GenerateRMNumberService::generate();
 
-        return view('client.success-register', compact('no_rm'));
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'role' => 'guest',
+                'password' => bcrypt($request->password),
+                'is_active' => 1,
+            ]);
+
+            $patien = Patient::create([
+                'name' => $request->name,
+                'address' => $request->address,
+                'ktp_number' => $request->ktp_number,
+                'phone_number' => $request->phone_number,
+                'rm_number' => $no_rm,
+                'user_id' => $user->id,
+            ]);
+
+            DB::commit();
+            $notification = array(
+                'status' => 'success',
+                'title' => 'Berhasil',
+                'message' => 'Pendaftaran berhasil',
+            );
+            return redirect()->route('login')->with($notification);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $notification = array(
+                'status' => 'error',
+                'title' => 'Gagal',
+                'message' => 'Pendaftaran gagal',
+            );
+            return redirect()->back()->with($notification);
+        }
     }
 
     public function registerPoli(Request $request)
@@ -58,14 +89,13 @@ class PatientController extends Controller
 
         $registration = RegistrationPoli::create([
             'patient_id' => $patient->id,
-            'poli_id' => $request->poli_id,
             'service_schedule_id' => $request->schedule_id,
             'status' => 'waiting',
             'complaint' => $request->complaint,
         ]);
 
         $registration->update([
-            'queue_number' => 'ANTRIAN-' . $registration->id
+            'queue_number' => "ANTRIAN-$request->poli_id-" . $registration->id
         ]);
 
         $notification = array(
