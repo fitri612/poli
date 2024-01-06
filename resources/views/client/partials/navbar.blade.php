@@ -10,15 +10,11 @@
             <div class="collapse navbar-collapse" id="navbarCodeply">
                 <ul class="nav navbar-nav ml-auto">
                     <li><a class="nav-link" href="{{ route('get.register.poli') }}">Buat Janji</a></li>
-                    <li><a class="nav-link" href="#services">Dokter Kami</a></li>
+                    <li><a class="nav-link" href="{{ route('info.doctor') }}">Info Dokter</a></li>
                     <li>
                         @if (Auth::check())
                             <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                         @else
-                            {{-- <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#exampleModal" onclick="{{ route('login') }}">
-                                Login
-                            </button> --}}
                             <a class="nav-link" href="{{ route('login') }}">Login</a>
                         @endif
                     </li>

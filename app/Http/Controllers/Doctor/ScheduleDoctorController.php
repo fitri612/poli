@@ -12,7 +12,8 @@ class ScheduleDoctorController extends Controller
 {
     public function index()
     {
-        $schedule = ServiceSchedule::where('doctor_id', auth()->user()->doctor->id)->first();
+        // $schedule = ServiceSchedule::where('doctor_id', auth()->user()->doctor->id)->first();
+        $schedule = ServiceSchedule::all();
         return view('dashboard.doctor.schedule.index', compact('schedule'));
     }
 
@@ -24,57 +25,58 @@ class ScheduleDoctorController extends Controller
             'hari' => 'required',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required',
+            'is_active' => 'required',
         ]);
 
-        // cek apakah jadwal bertabrakan dengan jadwal lain
-        $schedule = ServiceSchedule::where('doctor_id', '!=', $user->doctor->id)
-            ->where('day', $request->hari)
-            ->where('start_time', '<=', $request->jam_mulai)
-            ->where('end_time', '>=', $request->jam_selesai)
-            ->first();
 
-        if ($schedule) {
-            $notification = array(
-                'status' => 'error',
-                'title' => 'Gagal',
-                'message' => 'Jadwal bertabrakan dengan jadwal lain',
-            );
+        $dataServis = ServiceSchedule::all();
+        foreach ($dataServis as $data) {
+            if ($data->day == $request->hari) {
+                $notification = array(
+                    'status' => 'error',
+                    'title' => 'Gagal',
+                    'message' => 'Jadwal tidak dapat diubah, karena sudah ada jadwal yang sama',
+                );
 
-            return redirect()->back()->with($notification);
-        }
-
-        if ($user->doctor->serviceSchedule()->exists()) {
-            $schedule = ServiceSchedule::where('doctor_id', $user->doctor->id)->first();
-
-            // cari pasien yg periksa pada dan belum selesai
-            $pasien = RegistrationPoli::where('service_schedule_id', $schedule->id)
-                ->where('status', '!=', 'done')
-                ->first();
-
-            if ($pasien) {
-                if ($schedule->day != $request->hari) {
-                    $notification = array(
-                        'status' => 'error',
-                        'title' => 'Gagal',
-                        'message' => 'Jadwal tidak dapat diubah karena ada pasien yg belum selesai periksa',
-                    );
-
-                    return redirect()->back()->with($notification);
-                }
+                return redirect()->back()->with($notification);
             }
         }
 
+        ServiceSchedule::create([
+            'doctor_id' => $user->doctor->id,
+            'day' => $request->hari,
+            'start_time' => $request->jam_mulai,
+            'end_time' => $request->jam_selesai,
+            'is_active' => $request->is_active,
+        ]);
 
-        $user->doctor->serviceSchedule()->updateOrCreate(
-            [
-                'doctor_id' => $user->doctor->id,
-            ],
-            [
-                'day' => $request->hari,
-                'start_time' => $request->jam_mulai,
-                'end_time' => $request->jam_selesai,
-            ]
+        $notification = array(
+            'status' => 'toast_success',
+            'title' => 'Berhasil',
+            'message' => 'Jadwal berhasil terapkan',
         );
+
+        return redirect()->back()->with($notification);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $findData = ServiceSchedule::find($id);
+
+
+        $request->validate([
+            'is_active' => 'required',
+        ]);
+
+        if ($findData->is_active == 1) {
+            $findData->update([
+                'is_active' => 0,
+            ]);
+        } else {
+            $findData->update([
+                'is_active' => 1,
+            ]);
+        }
 
         $notification = array(
             'status' => 'toast_success',

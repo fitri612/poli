@@ -14,7 +14,14 @@ class PoliController extends Controller
     public function index()
     {
         $polis = Poli::all();
-        $schedules = ServiceSchedule::with('doctor')->get();
+        // $schedules = ServiceSchedule::with('doctor')->get();
+        $dataSchedules = ServiceSchedule::with('doctor')->get();
+        $schedules = [];
+        foreach ($dataSchedules as $schedule) {
+            if ($schedule->is_active == 1) {
+                array_push($schedules, $schedule);
+            }
+        }
 
         $registerPoli = RegistrationPoli::where('patient_id', auth()->user()->patient->id)->get();
         return view('dashboard.patient.poli.index', compact('polis', 'schedules', 'registerPoli'));
@@ -28,7 +35,6 @@ class PoliController extends Controller
             'complaint' => 'required',
         ]);
 
-        // cek apakah jadwal yang dipilih itu memiliki poli yang sama
         $schedule = ServiceSchedule::with('doctor')->find($request->schedule_id);
         $poli = $schedule->doctor->poli->id;
 

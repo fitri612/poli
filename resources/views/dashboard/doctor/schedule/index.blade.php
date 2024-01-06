@@ -59,6 +59,14 @@
                                                     id="jam_selesai" name="jam_selesai" value=""
                                                     placeholder="Jam Selesai....">
                                             </div>
+                                            <div class="form-group">
+                                                <label for="nama">Status</label>
+                                                <select name="is_active" id="is_active" class="form-control">
+                                                    <option value="">-- Pilih Status --</option>
+                                                    <option value="1">Aktif</option>
+                                                    <option value="0">Tidak Aktif</option>
+                                                </select>
+                                            </div>
                                             <div>
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
                                             </div>
@@ -68,59 +76,117 @@
                                         <div class="card mt-5">
                                             <div class="card-body">
                                                 <h5 class="text-center">Jadwal Praktik Sekarang</h5>
-                                                @if ($schedule)
-                                                    <table class="table table-bordered mt-4">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Hari</th>
-                                                                <th>Jam Mulai</th>
-                                                                <th>Jam Selesai</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                <table class="table table-bordered mt-4">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Hari</th>
+                                                            <th>Jam Mulai</th>
+                                                            <th>Jam Selesai</th>
+                                                            <th>Status</th>
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($schedule as $item)
                                                             <tr>
                                                                 <td>
-                                                                    @if ($schedule->day == 1)
+                                                                    @if ($item->day == 1)
                                                                         Senin
-                                                                    @elseif($schedule->day == 2)
+                                                                    @elseif($item->day == 2)
                                                                         Selasa
-                                                                    @elseif($schedule->day == 3)
+                                                                    @elseif($item->day == 3)
                                                                         Rabu
-                                                                    @elseif($schedule->day == 4)
+                                                                    @elseif($item->day == 4)
                                                                         Kamis
-                                                                    @elseif($schedule->day == 5)
+                                                                    @elseif($item->day == 5)
                                                                         Jumat
-                                                                    @elseif($schedule->day == 6)
+                                                                    @elseif($item->day == 6)
                                                                         Sabtu
-                                                                    @elseif($schedule->day == 7)
+                                                                    @elseif($item->day == 7)
                                                                         Minggu
                                                                     @endif
                                                                 </td>
-                                                                <td>{{ $schedule->start_time }}</td>
-                                                                <td>{{ $schedule->end_time}}</td>
+                                                                <td>{{ $item->start_time }}</td>
+                                                                <td>{{ $item->end_time }}</td>
+                                                                <td>
+                                                                    @if ($item->is_active == 1 || $item->is_active == '1')
+                                                                        Aktif
+                                                                    @else
+                                                                        Tidak Aktif
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <div class="text-center">
+                                                                        <button type="button" class="btn btn-warning"
+                                                                            data-toggle="modal"
+                                                                            data-target="#modalEdit-{{ $item->id }}">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                    </div>
+
+                                                                    <form method="POST"
+                                                                        action="{{ route('dashboard.doctor.schedule.update', $item->id) }}"
+                                                                        enctype="multipart/form-data">
+                                                                        @csrf
+                                                                        @method('put')
+                                                                        <div class="modal fade"
+                                                                            id="modalEdit-{{ $item->id }}">
+                                                                            <div class="modal-dialog">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h4 class="modal-title">Edit Data :
+                                                                                            {{ $item->nama }}</h4>
+                                                                                        <button type="button"
+                                                                                            class="close"
+                                                                                            data-dismiss="modal"
+                                                                                            aria-label="Close">
+                                                                                            <span
+                                                                                                aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <div class="form-group">
+                                                                                            <label
+                                                                                                for="is_active">Status</label>
+                                                                                            <select name="is_active"
+                                                                                                id="is_active"
+                                                                                                class="form-control">
+                                                                                                <option value="">
+                                                                                                    -- Pilih Status
+                                                                                                    --</option>
+                                                                                                <option value="1"
+                                                                                                    @if ($item->is_active == 1 || $item->is_active == '1') selected @endif>
+                                                                                                    Aktif</option>
+                                                                                                <option value="0"
+                                                                                                    @if ($item->is_active == 0 || $item->is_active == '0') selected @endif>
+                                                                                                    Tidak Aktif</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="submit"
+                                                                                            class="btn btn-warning">Update
+                                                                                            Data</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </td>
                                                             </tr>
-                                                        </tbody>
-                                                    </table>
-                                                @else
-                                                    <p class="text-center mt-5">Anda belum memiliki jadwal praktek <br> Atur jadwal praktik di form pada sisi kiri</p>
-                                                @endif
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /.card-body -->
                             </div>
-                            <!-- /.card -->
                         </div>
-                        <!-- /.col -->
                     </div>
-                    <!-- /.row -->
                 </div>
-                <!-- /.container-fluid -->
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 @endsection
 
 @section('css')

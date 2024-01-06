@@ -6,28 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Poli Klinik BK | Pendaftaran Poli</title>
 
-    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- icheck bootstrap -->
     <link rel="stylesheet" href="{{ asset('assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
 </head>
 
 <body class="hold-transition login-page">
 
     <div class="login-box" style="width: 450px !important">
-        <!-- /.login-logo -->
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
                 <h4>Poli Klinik </h4>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Mendaftar Poli</p>
-                {{-- message valdation error --}}
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Whoops!</strong> Terjadi kesalahan input data yang anda masukan.<br><br>
@@ -97,19 +91,14 @@
                         <textarea id="" cols="30" rows="3" class="form-control" name="complaint" placeholder="Keluhan">{{ old('complaint') }}</textarea>
                     </div>
                     <div class="row">
-                        <!-- /.col -->
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block">Daftar Sekarang</button>
                         </div>
-                        <!-- /.col -->
                     </div>
                 </form>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.login-box -->
 
     <!-- jQuery -->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>

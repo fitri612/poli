@@ -24,7 +24,6 @@
                         <div class="card">
                             <div class="card">
                                 <div class="card-header">
-                                    {{-- message error validation --}}
                                     @if ($errors->any())
                                         <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
                                             <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -68,7 +67,8 @@
                                                     <td>
                                                         Biaya Poli : Rp. 150.000
                                                         <br>
-                                                        Biaya Obat : Rp. {{ number_format($item->checkup->total_payment - 150000, 0, ',', '.') }}
+                                                        Biaya Obat : Rp.
+                                                        {{ number_format($item->checkup->total_payment - 150000, 0, ',', '.') }}
                                                         <br>
                                                         <b>
                                                             Total Biaya : Rp.

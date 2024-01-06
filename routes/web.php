@@ -12,6 +12,7 @@ use App\Http\Controllers\Doctor\HistoryController;
 use App\Http\Controllers\Doctor\ScheduleDoctorController;
 use App\Http\Controllers\Patient\PoliController as PatientPoliController;
 use App\Http\Controllers\PatientController as ControllersPatientController;
+use App\Models\Doctor;
 use App\Models\Poli;
 use App\Models\ServiceSchedule;
 use Illuminate\Support\Facades\Route;
@@ -32,8 +33,6 @@ Route::get('/', function () {
     return view('client.contents.index');
 });
 
-
-
 Route::get('/register/patient', function () {
     return view('client.register-rm');
 })->name('register.patient.view');
@@ -51,13 +50,17 @@ Route::get('/patient/poli-register', function () {
     return view('client.index', compact('polis', 'schedules'));
 })->name('get.register.poli');
 
+Route::get('/info-doctor', function () {
+    $doctor = Doctor::all();
+    $service = ServiceSchedule::all();
+    return view('dashboard.doctor.list-dokter.index', compact('doctor', 'service'));
+})->name('info.doctor');
+
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
-
     Route::prefix('patient')->middleware(['auth', 'patient', 'active'])->name('patient.')->group(function () {
         Route::resource('poli', PatientPoliController::class);
     });
-
     Route::prefix('admin')->middleware(['auth', 'admin', 'active'])->name('admin.')->group(function () {
         Route::resource('drug', DrugController::class);
         Route::resource('poli', PoliController::class);
@@ -66,7 +69,6 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
             Route::resource('patient', PatientController::class);
         });
     });
-
     Route::prefix('doctor')->middleware(['auth', 'doctor', 'active'])->name('doctor.')->group(function () {
         Route::resource('schedule', ScheduleDoctorController::class);
 

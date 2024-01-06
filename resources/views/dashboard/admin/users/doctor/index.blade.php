@@ -28,7 +28,6 @@
                                         data-target="#modalTambah">
                                         <i class="fas fa-file"></i> Tambah Data
                                     </button>
-                                    {{-- message error validation --}}
                                     @if ($errors->any())
                                         <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
                                             <strong>Whoops!</strong> There were some problems with your input.<br><br>

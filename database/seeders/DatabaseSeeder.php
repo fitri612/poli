@@ -10,6 +10,7 @@ use App\Models\ServiceSchedule;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Faker\Factory;
 use Illuminate\Support\Str;
 
 
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
     {
         $password = bcrypt('iniadmin');
         $password2 = bcrypt('inidokter');
+        $password3 = bcrypt('inipasien');
 
         // admin default
         User::create([
@@ -50,11 +52,11 @@ class DatabaseSeeder extends Seeder
         // pasien default
         User::create([
             'name' => 'Pasien',
-            'email' => 'test@gmail.com',
+            'email' => 'fitritest@gmail.com',
             'email_verified_at' => now(),
             'role' => 'guest',
             'is_active' => 1,
-            'password' => $password,
+            'password' => $password3,
             'remember_token' => Str::random(10),
         ]);
 
@@ -93,6 +95,14 @@ class DatabaseSeeder extends Seeder
             'rm_number' => '2101-001',
             'phone_number' => '081234567890',
             'address' => 'Jl. Pasien 1',
+        ]);
+
+        ServiceSchedule::create([
+            'doctor_id' => 1,
+            'day' => 1,
+            'start_time' => '08:00',
+            'end_time' => '12:00',
+            'is_active' => 1,
         ]);
 
         Drug::create([
