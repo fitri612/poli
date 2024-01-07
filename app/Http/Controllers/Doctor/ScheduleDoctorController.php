@@ -12,8 +12,13 @@ class ScheduleDoctorController extends Controller
 {
     public function index()
     {
-        // $schedule = ServiceSchedule::where('doctor_id', auth()->user()->doctor->id)->first();
-        $schedule = ServiceSchedule::all();
+        $allData = ServiceSchedule::all();
+        $schedule = [];
+        foreach ($allData as $data) {
+            if ($data->doctor_id == auth()->user()->doctor->id) {
+                array_push($schedule, $data);
+            }
+        }
         return view('dashboard.doctor.schedule.index', compact('schedule'));
     }
 
@@ -62,7 +67,17 @@ class ScheduleDoctorController extends Controller
     public function update(Request $request, $id)
     {
         $findData = ServiceSchedule::find($id);
+        $checkData = RegistrationPoli::where('service_schedule_id', $findData->id)->where('status', 'waiting')->first();
 
+        if ($checkData) {
+            $notification = array(
+                'status' => 'error',
+                'title' => 'Gagal',
+                'message' => 'Jadwal tidak dapat diubah, karena sudah ada pasien yang terdaftar',
+            );
+
+            return redirect()->back()->with($notification);
+        }
 
         $request->validate([
             'is_active' => 'required',

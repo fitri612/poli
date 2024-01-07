@@ -22,7 +22,8 @@ class DoctorController extends Controller
     {
         $doctors = Doctor::all();
         $polis = Poli::all();
-        return view('dashboard.admin.users.doctor.index', compact('doctors', 'polis'));
+        $services = ServiceSchedule::all();
+        return view('dashboard.admin.users.doctor.index', compact('doctors', 'polis', 'services'));
     }
 
     /**
@@ -33,6 +34,7 @@ class DoctorController extends Controller
      */
     public function store(Request $request)
     {
+
         $validation  = $request->validate([
             'name' => 'required',
             'email' => 'required|unique:users|email',
@@ -62,14 +64,6 @@ class DoctorController extends Controller
                 'poli_id' => $validation['poli_id']
             ]);
 
-            // $doctor = Doctor::where('user_id', $user->id)->first();
-
-            // ServiceSchedule::create([
-            //     'doctor_id' => $doctor->id,
-            //     'day' => $validation['hari'],
-            //     'start_time' => $validation['jam_mulai'],
-            //     'end_time' => $validation['jam_selesai'],
-            // ]);
 
             DB::commit();
             $notification = array(

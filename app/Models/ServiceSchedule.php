@@ -15,4 +15,5 @@ class ServiceSchedule extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+    
 }

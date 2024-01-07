@@ -46,7 +46,14 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middle
 
 Route::get('/patient/poli-register', function () {
     $polis = Poli::all();
-    $schedules = ServiceSchedule::with('doctor')->get();
+    $dataSchedules = ServiceSchedule::with('doctor')->get();
+    $schedules = [];
+    foreach ($dataSchedules as $schedule) {
+        if ($schedule->is_active == 1) {
+            array_push($schedules, $schedule);
+        }
+    }
+
     return view('client.index', compact('polis', 'schedules'));
 })->name('get.register.poli');
 

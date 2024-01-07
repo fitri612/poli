@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Doctor;
 use App\Http\Controllers\Controller;
 use App\Models\Drug;
 use App\Models\RegistrationPoli;
+use App\Models\ServiceSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,9 @@ class CheckupController extends Controller
             $query->where('doctor_id', auth()->user()->doctor->id);
         })->get();
 
-        return view('dashboard.doctor.checkup.index', compact('registration'));
+        $schedule = ServiceSchedule::all();
+
+        return view('dashboard.doctor.checkup.index', compact('registration', 'schedule'));
     }
 
     public function checkupForm($id)

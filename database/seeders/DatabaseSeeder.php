@@ -112,5 +112,29 @@ class DatabaseSeeder extends Seeder
             'price' => '10000',
             'stock' => '100',
         ]);
+
+        Drug::create([
+            'code' => '0002',
+            'name' => 'Amoxilin',
+            'packaging' => '10',
+            'price' => '20000',
+            'stock' => '100',
+        ]);
+
+        Drug::create([
+            'code' => '0003',
+            'name' => 'Antimo',
+            'packaging' => '10',
+            'price' => '30000',
+            'stock' => '100',
+        ]);
+
+        Drug::create([
+            'code' => '0004',
+            'name' => 'Antalgin',
+            'packaging' => '10',
+            'price' => '40000',
+            'stock' => '100',
+        ]);
     }
 }

@@ -21,4 +21,5 @@ class Checkup extends Model
     {
         return $this->hasMany(DrugDetail::class, 'checkup_id');
     }
+
 }

@@ -14,7 +14,6 @@ class PoliController extends Controller
     public function index()
     {
         $polis = Poli::all();
-        // $schedules = ServiceSchedule::with('doctor')->get();
         $dataSchedules = ServiceSchedule::with('doctor')->get();
         $schedules = [];
         foreach ($dataSchedules as $schedule) {

@@ -41,7 +41,7 @@
                                     @endif
                                     <div class="col-md-6">
                                         <form
-                                            action="{{ $registration->checkup ? route('dashboard.doctor.checkup.update', $registration->id)  : route('dashboard.doctor.checkup',$registration->id)}}"
+                                            action="{{ $registration->checkup ? route('dashboard.doctor.checkup.update', $registration->id) : route('dashboard.doctor.checkup', $registration->id) }}"
                                             method="POST">
                                             @csrf
                                             @if ($registration->checkup)
@@ -72,10 +72,16 @@
                                                     @foreach ($drugs as $item)
                                                         <option value="{{ $item->id }}"
                                                             {{ $registration->checkup && in_array($item->id, $registration->checkup->drugDetail->pluck('drug_id')->toArray()) ? 'selected' : '' }}>
-                                                            {{ $item->name }} - Rp.
-                                                            {{ number_format($item->price) }}</option>
+                                                            {{ $item->name }} - Rp. {{ number_format($item->price) }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="harga_poli">Harga Poli</label>
+                                                <input type="text" class="form-control" id="harga_poli" name="harga_poli"
+                                                    value="Rp150.000" readonly>
                                             </div>
 
                                             <div class="form-group">
@@ -85,6 +91,7 @@
                                             </div>
                                         </form>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

@@ -19,7 +19,7 @@
                     <p class="m-25px-b">Melayani dengan sepenuh hati, memberikan pelayanan kesehatan terbaik untuk
                         masyarakat</p>
                     <div class="hero-btn-wrapper">
-                        <a href="#" class="btn btn-default animated-btn">Daftar Sekarang</a>
+                        <a href="{{ route('get.register.poli') }}" class="btn btn-default animated-btn">Daftar Sekarang</a>
                     </div>
                 </div>
                 <div class="col-md-6 p-100px-t p-50px-b md-p-10px-t">

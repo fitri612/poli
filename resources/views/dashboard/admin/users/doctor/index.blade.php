@@ -164,26 +164,27 @@
                                                     <td>{{ $item->phone_number }}</td>
                                                     <td>{{ $item->address }}</td>
                                                     <td>
-                                                        @if ($item->serviceSchedule)
-                                                            <p>
+                                                        @foreach ($services as $service)
+                                                            @if ($service->doctor_id == $item->id)
                                                                 Hari :
-                                                                {{ $item->serviceSchedule->day == 1 ? 'Senin' : '' }}
-                                                                {{ $item->serviceSchedule->day == 2 ? 'Selasa' : '' }}
-                                                                {{ $item->serviceSchedule->day == 3 ? 'Rabu' : '' }}
-                                                                {{ $item->serviceSchedule->day == 4 ? 'Kamis' : '' }}
-                                                                {{ $item->serviceSchedule->day == 5 ? 'Jumat' : '' }}
-                                                                {{ $item->serviceSchedule->day == 6 ? 'Sabtu' : '' }}
-                                                                {{ $item->serviceSchedule->day == 7 ? 'Minggu' : '' }}
+                                                                {{ $service->day == 1 ? 'Senin' : '' }}
+                                                                {{ $service->day == 2 ? 'Selasa' : '' }}
+                                                                {{ $service->day == 3 ? 'Rabu' : '' }}
+                                                                {{ $service->day == 4 ? 'Kamis' : '' }}
+                                                                {{ $service->day == 5 ? 'Jumat' : '' }}
+                                                                {{ $service->day == 6 ? 'Sabtu' : '' }}
+                                                                {{ $service->day == 7 ? 'Minggu' : '' }}
                                                                 <br>
                                                                 Jam Mulai :
-                                                                {{ $item->serviceSchedule->start_time }}
+                                                                {{ $service->start_time }}
                                                                 <br>
                                                                 Jam Selesai :
-                                                                {{ $item->serviceSchedule->end_time }}
-                                                            </p>
-                                                        @else
-                                                            Dokter belum mengatur jadwal
-                                                        @endif
+                                                                {{ $service->end_time }}
+                                                                <br>
+                                                            @else
+                                                                Dokter belum mengatur jadwal
+                                                            @endif
+                                                        @endforeach
                                                     </td>
                                                     <td>
                                                         @if ($item->user->is_active == 1)
